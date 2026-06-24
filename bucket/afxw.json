@@ -1,0 +1,67 @@
+{
+    "version": "1.67",
+    "description": "あふw - 超低機能2画面ファイラ (AKT氏作)",
+    "homepage": "https://afxw.sakura.ne.jp/akt_afxw.html",
+    "license": "freeware",
+    "notes": [
+        "設定ファイル(AFXW.ini / AFXW.key)は ~\\scoop\\persist\\afxw に永続化されます。",
+        "DLL や Susie プラグインは別途 setup-plugins スクリプト等で配置してください。"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://afxw.sakura.ne.jp/lzh/afxw64_167.zip",
+            "hash": "631D91EA9EE5A48C45B980CD4266A33F3A1E683833084CF010F786367AAD78AA"
+        },
+        "32bit": {
+            "url": "https://afxw.sakura.ne.jp/lzh/afxw32_167.zip",
+            "hash": "F13FDD18C3A1DAFA9DF6297A9859D9FFF573AE89473F312C5E95478C03E5D712"
+        }
+    },
+    "pre_install": [
+        "# persist 対象がフォルダ化する問題を防ぐため、実体ファイルを先に用意する",
+        "$persistDir = \"$persist_dir\"",
+        "if (!(Test-Path $persistDir)) { New-Item -ItemType Directory -Path $persistDir -Force | Out-Null }",
+        "foreach ($f in @('AFXW.ini', 'AFXW.key')) {",
+        "    $target = Join-Path $persistDir $f",
+        "    # 誤って作られたフォルダが残っていたら除去",
+        "    if ((Test-Path $target) -and (Get-Item $target).PSIsContainer) {",
+        "        Remove-Item $target -Recurse -Force",
+        "    }",
+        "    if (!(Test-Path $target)) {",
+        "        # リポジトリ等の初期設定があればそれを採用、無ければ空ファイルを作成",
+        "        $seed = Join-Path $dir $f",
+        "        if (Test-Path $seed) {",
+        "            Copy-Item $seed $target -Force",
+        "        } else {",
+        "            New-Item -ItemType File -Path $target -Force | Out-Null",
+        "        }",
+        "    }",
+        "}"
+    ],
+    "bin": "AFXW.EXE",
+    "shortcuts": [
+        ["AFXW.EXE", "あふw"]
+    ],
+    "persist": [
+        "AFXW.ini",
+        "AFXW.key"
+    ],
+    "post_install": [
+        "Write-Host 'あふw のインストールが完了しました。' -ForegroundColor Green",
+        "Write-Host \"設定ファイルは $persist_dir に永続化されています。\" -ForegroundColor Cyan"
+    ],
+    "checkver": {
+        "url": "https://afxw.sakura.ne.jp/akt_afxw.html",
+        "regex": "afxw64_(?<short>[\\d]+)\\.zip"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://afxw.sakura.ne.jp/lzh/afxw64_$matchShort.zip"
+            },
+            "32bit": {
+                "url": "https://afxw.sakura.ne.jp/lzh/afxw32_$matchShort.zip"
+            }
+        }
+    }
+}
