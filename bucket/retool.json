@@ -1,0 +1,13 @@
+{
+    "version": "2.4.9",
+    "description": "Retool",
+    "homepage": "https://unexpectedpanda.github.io/retool/",
+    "license": "freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://unexpectedpanda.github.io/files/retool-2.4.9-win-x86-64.zip",
+            "hash": "e2cf714d89dd9dc68c187c8d0f321bc2fc73ebb0bf29902295ecf4b30ee54efd"
+        }
+    },
+    "bin": "retoolgui.exe"
+}
